@@ -8,4 +8,4 @@ In this study, we propose a decision tree classifier of heart sound signals. We 
 
 As a result, our classifier attained sensitivity (Se) of 0.66 and specificity (Sp) of 0.92 and overall score of 0.79 for a hidden random (revised) subset.
 
-![alt tag](http://url/to/img.png)
+![alt tag](https://github.com/jtmakela/CinC-2016/blob/master/s1.average.png)
