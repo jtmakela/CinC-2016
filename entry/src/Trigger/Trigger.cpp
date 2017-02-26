@@ -25,6 +25,13 @@
 
 namespace Accbpm {
 
+/*
+ * A rough energy slope trigger. Derived from the Accbpm project.
+ *
+ * @param cl_float const * Pointer to energy signal
+ * @param size_t const & Length of energy signal in samples
+ * @param doube const & Sample rate in time domain (eq. samples per second)
+ */
 Trigger::Trigger(cl_float const *energy, size_t const &len,
 		double const &sample_freq) :
 		sample_freq(sample_freq), energy(energy), len(len) {
@@ -37,7 +44,14 @@ Trigger::Trigger(cl_float const *energy, size_t const &len,
 Trigger::~Trigger() {
 }
 
-// fast implementation for finding kth smallest element in array. Notice that this implementation modifies input array a!!!
+/*
+ * Fast implementation for finding kth smallest element in array.
+ *
+ * @param cl_float [] An array of values to sort. Notice that this implementation modifies the array.
+ * @param ssize_t const Length of array
+ * @param ssize_t const kth smallest value to extract from the array
+ * @return double Value fo the kth smallest item in array
+ */
 double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
 	cl_float const &x = a[k];
 	for (ssize_t l = 0, m = n - 1; l < m;) {
@@ -67,7 +81,20 @@ double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
 	return x;
 }
 
-// Minmaxminmax.. A bit too complex threshold function for simple algorithm -- copy from ECG trig algorithm. TODO more suitable
+/*
+ * Define trigger threshold value by energy minmaxminmax..
+ *
+ * A bit too complex threshold function for simple algorithm -- a copy from ECG trig algorithm
+ *
+ * TODO more suitable
+ *
+ * @param cl_float const * Pointer to the source signal
+ * @param int Lenght of source signal in samples
+ * @param int Number of samples to skip from the beginning of source signal
+ * @param double Sample rate of the source signal in time domain (eq. samples per second)
+ * @param double *threshold Pointer to output
+ * @return int Always returns 0
+ */
 int Trigger::define_threshold_value(cl_float const *energy, int len,
 		int skip_offset, double freq, double *threshold) {
 	int base_len = freq * 0.100;
@@ -110,6 +137,14 @@ int Trigger::define_threshold_value(cl_float const *energy, int len,
 	return (0);
 }
 
+/*
+ * The actual trigger
+ *
+ * Trig on energy signal above limit. Expect the signal to remain above limit for 400ms
+ * tolerating 60ms continuous sinking below limit. Skips 200ms after each trig.
+ *
+ * @return int Always returns zero
+ */
 int Trigger::trig_do() {
 	int const max_tolerance = 0.060 * sample_freq, max_above_len = 0.400
 			* sample_freq;
@@ -179,6 +214,11 @@ int Trigger::trig_do() {
 	return (0);
 }
 
+/*
+ * Getter for trigged events
+ *
+ * @return std::vector<struct ref_event> const & Reference to vector of trigged events
+ */
 ref_ev const &Trigger::get_events() const {
 	return ev;
 }

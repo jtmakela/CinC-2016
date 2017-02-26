@@ -53,14 +53,14 @@ int main(int argc, char *argv[]) {
 	Classifier::result_e result = Classifier::unknown;
 	Simplified::Retrigger retrig(0.25);
 
-// a bit inconsistent naming convention.. these are required to get the energy signal
+	// A bit inconsistent naming convention.. these are required to get the energy signal
 	Trigger::Csv2kernel kernel(convolution_kernel);
 	retrig.set_convolution_kernel(kernel.get_data(), kernel.size());
 
 	retrig.set_data(dat.get_signal(), dat.size());
 	cl_float const *energy = retrig.get_energy();
 
-// a simple minmaxminmax trigger, will fire both on S1 and S2
+	// A simple minmaxminmax trigger, will fire both on S1 and S2
 	Accbpm::Trigger trig(energy, dat.size(), 2000.0);
 	try {
 		ref_ev const &ev = trig.get_events();

@@ -25,6 +25,13 @@
 
 namespace Trigger {
 
+/*
+ * Convolution kernel loader. Converts from CSV to binary format
+ *
+ * Caches binary format file in /tmp/
+ *
+ * @param char const * Kernel filename
+ */
 Csv2kernel::Csv2kernel(char const *filename) :
 		kernel(0), kernel_len(0) {
 	struct stat sb;
@@ -125,9 +132,19 @@ Csv2kernel::~Csv2kernel() {
 	}
 }
 
+/*
+ * Getter for kernel window
+ *
+ * @return cl_float const * Pointer to kernel window
+ */
 cl_float const *Csv2kernel::get_data() const {
 	return kernel;
 }
+/*
+ * Getter for kernel window size
+ *
+ * @return size_t const & Lenght of kernel window in samples
+ */
 size_t const &Csv2kernel::size() const {
 	return kernel_len;
 }

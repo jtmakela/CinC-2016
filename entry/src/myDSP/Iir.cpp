@@ -33,6 +33,9 @@ Iir::~Iir() {
 	coeff.b.clear();
 }
 
+/*
+ * Initialization of precalculated coefficients.
+ */
 void Iir::init_coefficients(enum iir_mode_e const mode) {
 	coeff.a.clear();
 	coeff.b.clear();
@@ -490,6 +493,14 @@ void Iir::init_coefficients(enum iir_mode_e const mode) {
 	}
 }
 
+/*
+ * The actual IIR calculator
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @return int libc errno
+ */
 int Iir::calc(float **out, float const *in, size_t const &len) {
 	off_t const padding = coeff.a.size();
 
@@ -567,6 +578,15 @@ int Iir::calc(float **out, float const *in, size_t const &len) {
 	return 0;
 }
 
+/*
+ * Run predefined filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param enum iir_mode_e const & filter to use
+ * @return int libc errno
+ */
 int Iir::filter(float **out, float const *in, size_t const &len,
 		enum iir_mode_e const &mode) {
 #ifdef VERBOSE
@@ -576,12 +596,34 @@ int Iir::filter(float **out, float const *in, size_t const &len,
 	return calc(out, in, len);
 }
 
+/*
+ * First order low-pass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff frequency
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::low_pass(float **out, const float *in, const size_t len,
 		const float cutoff_freq, const float sample_freq) {
 	calc_simple_coefficients(cutoff_freq, sample_freq);
 	return calc(out, in, len);
 }
 
+/*
+ * Nth order Chebyshev low-pass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff frequency
+ * @param float const Allowed ripple percentage
+ * @parma size_t const Number of poles
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::low_pass(float **out, const float *in, const size_t len,
 		const float cutoff_freq, float const ripple_percent,
 		const size_t number_of_poles, const float sample_freq) {
@@ -590,6 +632,16 @@ int Iir::low_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
+/*
+ * First order high-pass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff frequency
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::high_pass(float **out, const float *in, const size_t len,
 		const float cutoff_freq, const float sample_freq) {
 	calc_simple_coefficients(cutoff_freq, sample_freq);
@@ -618,6 +670,18 @@ int Iir::high_pass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
+/*
+ * Nth order Chebyshev high-pass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff frequency
+ * @param float const Allowed ripple percentage
+ * @parma size_t const Number of poles
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::high_pass(float **out, const float *in, const size_t len,
 		const float cutoff_freq, float const ripple_percent,
 		const size_t number_of_poles, const float sample_freq) {
@@ -626,6 +690,17 @@ int Iir::high_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
+/*
+ * Narrow pass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Center frequency
+ * @param float const Passband around the center frequency
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::narrow_pass(float **out, const float *in, const size_t len,
 		const float center_freq, const float bandwidth,
 		const float sample_freq) {
@@ -634,6 +709,17 @@ int Iir::narrow_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
+/*
+ * First order bandpass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff low frequency
+ * @param float const Cutoff high frequency
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::bandpass(float **out, const float *in, const size_t len,
 		const float low_freq, const float high_freq, const float sample_freq) {
 
@@ -670,6 +756,19 @@ int Iir::bandpass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
+/*
+ * Nth order Chebyshev bandpass filter
+ *
+ * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param float const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff low frequency
+ * @param float const Cutoff high frequency
+ * @param float const Allowed ripple percentage
+ * @parma size_t const Number of poles
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::bandpass(float **out, const float *in, const size_t len,
 		const float low_freq, const float high_freq, float const ripple_percent,
 		const size_t number_of_poles, const float sample_freq) {
@@ -712,6 +811,19 @@ int Iir::bandpass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
+/*
+ * Nth order Chebyshev bandpass filter
+ *
+ * @param double ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
+ * @param double const * Pointer to input data
+ * @param size_t const & length of input in samples
+ * @param float const Cutoff low frequency
+ * @param float const Cutoff high frequency
+ * @param float const Allowed ripple percentage
+ * @parma size_t const Number of poles
+ * @param float const Sample frequency
+ * @return int libc errno
+ */
 int Iir::bandpass(double **out, const double *in, const size_t len,
 		const float low_freq, const float high_freq, float const ripple_percent,
 		const size_t number_of_poles, const float sample_freq) {
@@ -741,6 +853,12 @@ int Iir::bandpass(double **out, const double *in, const size_t len,
 	return 0;
 }
 
+/*
+ * Narrow-pass coefficient calculator
+ *
+ * @param float const Bandwidth
+ * @param float const Center frequency
+ */
 void Iir::calc_narrow_pass_coefficients(const float bandwidth,
 		const float center_freq) {
 #ifdef VERBOSE
@@ -762,6 +880,12 @@ void Iir::calc_narrow_pass_coefficients(const float bandwidth,
 	coeff.b[2] = -R * R;
 }
 
+/*
+ * First order coefficient calculator
+ *
+ * @param float const Cutoff frequency
+ * @param float const Sample frequency
+ */
 void Iir::calc_simple_coefficients(float const cutoff_freq,
 		float const sample_freq) {
 	float f = cutoff_freq / sample_freq;
@@ -784,11 +908,11 @@ void Iir::calc_simple_coefficients(float const cutoff_freq,
 
 /**
  *
- * @param float cut-off frequency. Must be in range 0 to 0.5 times the sampling frequency.
- * @param bool   are the desired coefficients for high-pass (or low pass) filter
- * @param float desired ripple percentage in range 0 to 29
- * @param int    number of poles, an event integer in berween 2 and 20
- * @oaran float desired sampling frequency domain
+ * @param float Cut-off frequency. Must be in range 0 to 0.5 times the sampling frequency.
+ * @param bool Are the desired coefficients for high-pass (or low pass) filter
+ * @param float Desired ripple percentage in range 0 to 29
+ * @param int Number of poles, an event integer in berween 2 and 20
+ * @oaran float Desired sampling frequency domain
  */
 void Iir::calc_chebyshev_coefficients(float const cutoff_freq,
 		bool const is_high_pass, float const ripple_percent,
@@ -939,11 +1063,11 @@ void Iir::calc_chebyshev_coefficients(float const cutoff_freq,
 
 /**
  *
- * @param float cut-off frequency in fractions of sampling frequency. Must be in range 0 to 0.5
- * @param bool   are the desired coefficients for high-pass (or low pass) filter
- * @param float desired ripple percentage in range 0 to 29
- * @param int    number of poles, an event integer in berween 2 and 20
- * @param int    iteration round index
+ * @param float Cut-off frequency in fractions of sampling frequency. Must be in range 0 to 0.5
+ * @param bool Are the desired coefficients for high-pass (or low pass) filter
+ * @param float Desired ripple percentage in range 0 to 29
+ * @param int Number of poles, an event integer in berween 2 and 20
+ * @param int Iteration round index
  */
 void Iir::chebyshev_coefficient_iterator(float const cutoff_freq,
 		bool const is_high_pass, float const ripple_percent,

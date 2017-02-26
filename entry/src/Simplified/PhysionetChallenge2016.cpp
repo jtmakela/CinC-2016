@@ -25,6 +25,13 @@
 
 namespace Signal {
 
+/*
+ * Read PhysioNet / CinC 2016 Wav file to buffer
+ *
+ * Corrects corrupted data baseline and amplitude scale on demand
+ *
+ * @param char const * Input filename
+ */
 PhysionetChannelge2016::PhysionetChannelge2016(char const *basename) {
 	char filename[FILENAME_MAX];
 	sprintf(filename, "%s.wav", basename);
@@ -130,9 +137,15 @@ PhysionetChannelge2016::~PhysionetChannelge2016() {
 	mm_free(dat.ch->raw);
 }
 
+/*
+ * @return data_raw_t * Pointer to struct data_raw_t
+ */
 data_raw_t *PhysionetChannelge2016::get_signal() const {
 	return dat.ch->raw;
 }
+/*
+ * @return size_t const & Number of samples in data
+ */
 size_t const &PhysionetChannelge2016::size() const {
 	return dat.samples_per_channel;
 }
