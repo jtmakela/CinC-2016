@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -19,20 +19,21 @@
  *
  *  Created on: Apr 28, 2016
  *      Author: jtmakela
+ *  Based on PhysioNet WAV reader by hvaanane
  */
 
 #include "PhysionetChallenge2016.h"
 
 namespace Signal {
 
-/*
+/**
  * Read PhysioNet / CinC 2016 Wav file to buffer
  *
  * Corrects corrupted data baseline and amplitude scale on demand
  *
  * @param char const * Input filename
  */
-PhysionetChannelge2016::PhysionetChannelge2016(char const *basename) {
+PhysionetChallenge2016::PhysionetChallenge2016(char const *basename) {
 	char filename[FILENAME_MAX];
 	sprintf(filename, "%s.wav", basename);
 
@@ -48,6 +49,7 @@ PhysionetChannelge2016::PhysionetChannelge2016(char const *basename) {
 		throw errno;
 	}
 
+ 	// FIXME: supports only one channel little-endian 16bit PCM data
 	dat.sample_freq = 2000.0;
 	dat.samples_per_channel = (sb.st_size - 44) / sizeof(int16_t);
 	dat.number_of_channels = 1;
@@ -133,20 +135,20 @@ PhysionetChannelge2016::PhysionetChannelge2016(char const *basename) {
 	}
 }
 
-PhysionetChannelge2016::~PhysionetChannelge2016() {
+PhysionetChallenge2016::~PhysionetChallenge2016() {
 	mm_free(dat.ch->raw);
 }
 
-/*
+/**
  * @return data_raw_t * Pointer to struct data_raw_t
  */
-data_raw_t *PhysionetChannelge2016::get_signal() const {
+data_raw_t *PhysionetChallenge2016::get_signal() const {
 	return dat.ch->raw;
 }
-/*
+/**
  * @return size_t const & Number of samples in data
  */
-size_t const &PhysionetChannelge2016::size() const {
+size_t const &PhysionetChallenge2016::size() const {
 	return dat.samples_per_channel;
 }
 

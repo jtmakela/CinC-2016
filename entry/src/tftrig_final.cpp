@@ -1,4 +1,4 @@
-/*
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
 	clock_t ref = clock();
 
-	Signal::PhysionetChannelge2016 dat(data_filename);
+	Signal::PhysionetChallenge2016 dat(data_filename);
 	printf("data: %s\n", data_filename);
 
 	Classifier::result_e result = Classifier::unknown;

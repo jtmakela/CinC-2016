@@ -1,4 +1,4 @@
-/*
+/**
  * Trigger.h
  *
  *  Created on: Aug 24, 2015

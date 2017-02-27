@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -19,13 +19,14 @@
  *
  *  Created on: Aug 24, 2015
  *      Author: jtmakela
+ *  Based on an ECG trig algorithm by hvaanane
  */
 
 #include "Trigger.h"
 
 namespace Accbpm {
 
-/*
+/**
  * A rough energy slope trigger. Derived from the Accbpm project.
  *
  * @param cl_float const * Pointer to energy signal
@@ -44,15 +45,17 @@ Trigger::Trigger(cl_float const *energy, size_t const &len,
 Trigger::~Trigger() {
 }
 
-/*
+/**
  * Fast implementation for finding kth smallest element in array.
+ *
+ * FIXME: This could be replaced with std::nth_element
  *
  * @param cl_float [] An array of values to sort. Notice that this implementation modifies the array.
  * @param ssize_t const Length of array
  * @param ssize_t const kth smallest value to extract from the array
  * @return double Value fo the kth smallest item in array
  */
-double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
+__attribute__((deprecated)) double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
 	cl_float const &x = a[k];
 	for (ssize_t l = 0, m = n - 1; l < m;) {
 		ssize_t i = l;
@@ -81,7 +84,7 @@ double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
 	return x;
 }
 
-/*
+/**
  * Define trigger threshold value by energy minmaxminmax..
  *
  * A bit too complex threshold function for simple algorithm -- a copy from ECG trig algorithm
@@ -137,7 +140,7 @@ int Trigger::define_threshold_value(cl_float const *energy, int len,
 	return (0);
 }
 
-/*
+/**
  * The actual trigger
  *
  * Trig on energy signal above limit. Expect the signal to remain above limit for 400ms
@@ -214,7 +217,7 @@ int Trigger::trig_do() {
 	return (0);
 }
 
-/*
+/**
  * Getter for trigged events
  *
  * @return std::vector<struct ref_event> const & Reference to vector of trigged events

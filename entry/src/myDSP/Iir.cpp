@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -33,7 +33,7 @@ Iir::~Iir() {
 	coeff.b.clear();
 }
 
-/*
+/**
  * Initialization of precalculated coefficients.
  */
 void Iir::init_coefficients(enum iir_mode_e const mode) {
@@ -493,7 +493,7 @@ void Iir::init_coefficients(enum iir_mode_e const mode) {
 	}
 }
 
-/*
+/**
  * The actual IIR calculator
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -578,7 +578,7 @@ int Iir::calc(float **out, float const *in, size_t const &len) {
 	return 0;
 }
 
-/*
+/**
  * Run predefined filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -596,7 +596,7 @@ int Iir::filter(float **out, float const *in, size_t const &len,
 	return calc(out, in, len);
 }
 
-/*
+/**
  * First order low-pass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -612,7 +612,7 @@ int Iir::low_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
-/*
+/**
  * Nth order Chebyshev low-pass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -632,7 +632,7 @@ int Iir::low_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
-/*
+/**
  * First order high-pass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -670,7 +670,7 @@ int Iir::high_pass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
-/*
+/**
  * Nth order Chebyshev high-pass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -690,7 +690,7 @@ int Iir::high_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
-/*
+/**
  * Narrow pass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -709,7 +709,7 @@ int Iir::narrow_pass(float **out, const float *in, const size_t len,
 	return calc(out, in, len);
 }
 
-/*
+/**
  * First order bandpass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -756,7 +756,7 @@ int Iir::bandpass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
-/*
+/**
  * Nth order Chebyshev bandpass filter
  *
  * @param float ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -811,7 +811,7 @@ int Iir::bandpass(float **out, const float *in, const size_t len,
 	return 0;
 }
 
-/*
+/**
  * Nth order Chebyshev bandpass filter
  *
  * @param double ** Pointer to pointer to output memory. The memory is allocated internally. Preallocated memory is freed.
@@ -853,7 +853,7 @@ int Iir::bandpass(double **out, const double *in, const size_t len,
 	return 0;
 }
 
-/*
+/**
  * Narrow-pass coefficient calculator
  *
  * @param float const Bandwidth
@@ -880,7 +880,7 @@ void Iir::calc_narrow_pass_coefficients(const float bandwidth,
 	coeff.b[2] = -R * R;
 }
 
-/*
+/**
  * First order coefficient calculator
  *
  * @param float const Cutoff frequency

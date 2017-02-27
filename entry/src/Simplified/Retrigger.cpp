@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -25,7 +25,7 @@
 
 namespace Simplified {
 
-/*
+/**
  * Setup routines for retigger
  *
  * Uses cached Blackman window (/tmp/Retrigger.blackman,window.dat). Must be manually deleted
@@ -112,7 +112,7 @@ Retrigger::~Retrigger() {
 	mm_free(energy);
 }
 
-/*
+/**
  * Set data and generates the energy norm
  *
  * Energy norm is defined by:
@@ -144,7 +144,7 @@ void Retrigger::set_data(data_raw_t const *raw, size_t const &len) {
 	calculate_energy();
 }
 
-/*
+/**
  * Set convolution kernel for retirgger routines
  *
  * Simplified to PhysioNet environment from OpenCL enabled environment.
@@ -170,7 +170,7 @@ void Retrigger::set_convolution_kernel(cl_float const *kernel,
 
 #define POW2(_a) ((_a) * (_a))
 
-/*
+/**
  * A convolution routine.
  *
  * See retrig.cl
@@ -198,7 +198,7 @@ static void retrig_convolution_program(cl_float *out, cl_float *a,
 	}
 }
 
-/*
+/**
  * An energy norm routine
  *
  * See retrig.cl
@@ -226,7 +226,7 @@ static void retrig_energy_program(cl_float *out, cl_float *a, ulong const a_len,
 	}
 }
 
-/*
+/**
  * Calculate the internal energy signal from internally set data signal
  */
 void Retrigger::calculate_energy() {
@@ -258,7 +258,7 @@ void Retrigger::calculate_energy() {
 	mm_free(tmp);
 }
 
-/*
+/**
  * Find local energy maxima near reference events and set locally stored temporary events accordingly
  *
  * @param struct ref_event const & Reference event
@@ -295,7 +295,7 @@ void Retrigger::calc(struct ref_event const &e, off_t const &_offset) {
 #endif
 }
 
-/*
+/**
  * Calculate average
  *
  * @param cl_float * Pointer to data
@@ -310,7 +310,7 @@ static cl_float avg(cl_float const *d, ulong const &len) {
 	return _avg / len;
 }
 
-/*
+/**
  * A custom correlation signal routine
  *
  * Divider is set as the greatest standard deviation. See the article for ruther reasoning.
@@ -352,7 +352,7 @@ struct range {
 	off_t end;
 };
 
-/*
+/**
  * Calculate cross correlations near each local temporary event
  */
 void Retrigger::calculate_correlations() {
@@ -407,7 +407,7 @@ void Retrigger::calculate_correlations() {
 	}
 }
 
-/*
+/**
  * Form cluster from event
  *
  * @param std::vector<ref_ev_ext_it>::iterator & Reference to trunk event
@@ -531,7 +531,7 @@ retrig_ev Retrigger::form_cluster(
 	return ev;
 }
 
-/*
+/**
  * A sort function
  *
  * Sorts by size weighted correlation
@@ -545,7 +545,7 @@ bool corr_p_sort(ref_ev_ext_it i, ref_ev_ext_it j) {
 			> j->correlation.p * j->cluster.stack.size());
 }
 
-/*
+/**
  * Run autocorrelation for ref_events and form clusters from events
  *
  * Chooses the cluster with the best total correlation as the base event
@@ -725,7 +725,7 @@ void Retrigger::calc_correlations(double const &correlation_limit) {
 	evx.clear();
 }
 
-/*
+/**
  * Getter for events
  *
  * @return const std::vector<struct retrig_event> & Events in EV cluster
@@ -734,7 +734,7 @@ const retrig_ev &Retrigger::get_events() const {
 	return ev;
 }
 
-/*
+/**
  * Getter for events
  *
  * @return const std::vector<struct retrig_event> & Events in S1 cluster
@@ -746,7 +746,7 @@ const retrig_ev &Retrigger::get_s1_events() const {
 	return s1;
 }
 
-/*
+/**
  * Getter for events
  *
  * @return const std::vector<struct retrig_event> & Events in S2 cluster
@@ -758,7 +758,7 @@ const retrig_ev &Retrigger::get_s2_events() const {
 	return s2;
 }
 
-/*
+/**
  * Getter for energy signal
  *
  * @return const cl_float * Pointer to the energy signal
@@ -767,7 +767,7 @@ const cl_float *Retrigger::get_energy() const {
 	return energy;
 }
 
-/*
+/**
  * A sort function
  *
  * Sorts by event offset
@@ -780,7 +780,7 @@ bool offset_sort(struct ref_event_ext i, struct ref_event_ext j) {
 	return (i.offset < j.offset);
 }
 
-/*
+/**
  * Copies an external reference event vector to an internal event structure.
  *
  * If the number of reference events exceeds /ref_ev_limit/, only the
@@ -836,7 +836,7 @@ void Retrigger::set_ref_ev(ref_ev const &ev) {
 	std::sort(evx.begin(), evx.end(), offset_sort);
 }
 
-/*
+/**
  * Setter for convolution lookaround window
  *
  * @param double const & Window length in samples
@@ -848,7 +848,7 @@ void Retrigger::set_lookaround_window(double const &len, double const &offset) {
 	lookaround_window.len_in_bytes = lookaround_window.len * sizeof(cl_float);
 }
 
-/*
+/**
  * Setter for correlation window
  *
  * @param double const & Window length in samples

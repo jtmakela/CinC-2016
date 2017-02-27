@@ -1,4 +1,4 @@
-/*
+/**
  * Retrigger.h
  *
  *  Created on: Mar 27, 2016

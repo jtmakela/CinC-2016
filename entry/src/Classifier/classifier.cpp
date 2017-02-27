@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -133,7 +133,7 @@ __attribute_used__ int do_with_strings(struct data *data,
 	}
 }
 
-/*
+/**
  * A dynamically created tree classifier. See the article for further details.
  *
  * @param struct data * Pointer to ECG legacy data structure

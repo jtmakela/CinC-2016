@@ -1,4 +1,4 @@
-/*
+/**
  * memory_manager.h
  *
  *  Created on: Apr 8, 2015

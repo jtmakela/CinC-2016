@@ -1,4 +1,4 @@
-/* 
+/**
  *  tftrig_final - a heart sound classifier
  *  Copyright (C) 2016 Jarno Mäkelä and Heikki Väänänen, RemoteA Ltd
  *
@@ -25,7 +25,7 @@
 
 namespace Trigger {
 
-/*
+/**
  * Convolution kernel loader. Converts from CSV to binary format
  *
  * Caches binary format file in /tmp/
@@ -132,7 +132,7 @@ Csv2kernel::~Csv2kernel() {
 	}
 }
 
-/*
+/**
  * Getter for kernel window
  *
  * @return cl_float const * Pointer to kernel window
@@ -140,7 +140,7 @@ Csv2kernel::~Csv2kernel() {
 cl_float const *Csv2kernel::get_data() const {
 	return kernel;
 }
-/*
+/**
  * Getter for kernel window size
  *
  * @return size_t const & Lenght of kernel window in samples

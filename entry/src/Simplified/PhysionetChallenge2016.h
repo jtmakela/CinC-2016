@@ -1,5 +1,5 @@
-/*
- * PhysionetChannelge2016.h
+/**
+ * PhysionetChallenge2016.h
  *
  *  Created on: Apr 28, 2016
  *      Author: jtmakela
@@ -21,10 +21,10 @@
 
 namespace Signal {
 
-class PhysionetChannelge2016 {
+class PhysionetChallenge2016 {
 public:
-	explicit PhysionetChannelge2016(char const *basename);
-	virtual ~PhysionetChannelge2016();
+	explicit PhysionetChallenge2016(char const *basename);
+	virtual ~PhysionetChallenge2016();
 
 	data_raw_t *get_signal() const;
 	size_t const &size() const;
