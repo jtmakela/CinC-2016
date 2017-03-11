@@ -8,13 +8,7 @@
 #ifndef TRIGGER_CSV2KERNEL_H_
 #define TRIGGER_CSV2KERNEL_H_
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <libgen.h>
-#include <unistd.h>
-#include "macro.h"
-#include "types.event.h"
-#include "../utils/memory_manager.h"
+#include "types.data.h"
 
 namespace Trigger {
 

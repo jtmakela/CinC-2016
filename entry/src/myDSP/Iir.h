@@ -8,14 +8,7 @@
 #ifndef SRC_MYDSP_IIR_H_
 #define SRC_MYDSP_IIR_H_
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <math.h>
 #include <vector>
-#include "../utils/memory_manager.h"
-
-#define M_PI		3.14159265358979323846
 
 namespace DSP {
 

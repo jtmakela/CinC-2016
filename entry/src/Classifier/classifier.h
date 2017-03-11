@@ -32,7 +32,7 @@ enum result_e {
 };
 
 enum result_e classify_this(struct data *data, Simplified::retrig_ev const *ev1,
-		Simplified::retrig_ev const *ev2, char *tree_name);
+		Simplified::retrig_ev const *ev2, char const *tree_name);
 
 } // namespace Classifier
 

@@ -21,11 +21,15 @@
  *      Author: jtmakela
  */
 
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <sys/stat.h>
+#include <time.h>
+
+#include "macro.h"
 
 #include "Trigger/Csv2kernel.h"
 #include "Trigger/Trigger.h"
@@ -39,7 +43,7 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr,
 				"[%s:%u] usage: %s <trigger convolution kernel.csv> <file base id, eg. a0123>\n",
 				__FILE__, __LINE__, argv[0]);
-		exit(EXIT_FAILURE);
+		exit (EXIT_FAILURE);
 	}
 
 	char const *convolution_kernel = argv[1];
@@ -73,7 +77,7 @@ int main(int argc, char *argv[]) {
 		// auto correlate, jut for fun!
 		retrig.calc_correlations(0.8);
 	} catch (int e) {
-		exit(EXIT_FAILURE);
+		exit (EXIT_FAILURE);
 	}
 
 	{
@@ -132,7 +136,7 @@ int main(int argc, char *argv[]) {
 		FILE *f = fopen("answers.txt", "a");
 		if (f == 0) {
 			PERROR("fopen");
-			throw errno;
+			return errno;
 		}
 
 		int r = 0;

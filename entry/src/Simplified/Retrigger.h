@@ -8,18 +8,7 @@
 #ifndef OPENCL_RETRIGGER_H_
 #define OPENCL_RETRIGGER_H_
 
-#include <math.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <vector>
-#include <map>
-#include <algorithm>    // std::sort
-#include <limits> // std::numeric
-#include <time.h> // clock
-
-#include "../utils/memory_manager.h"
-#include "../myDSP/Iir.h"
 #include "types.data.h"
 #include "types.event.h"
 
@@ -56,8 +45,8 @@ typedef retrig_ev::const_iterator retrig_ev_it;
 
 class Retrigger {
 public:
-	static double const sample_freq = 2000.0;
-	static size_t const ref_ev_limit = 100;
+	static double constexpr sample_freq = 2000.0;
+	static size_t constexpr ref_ev_limit = 100;
 
 	Retrigger(double const &window_length_in_fractions_of_sample_time);
 	virtual ~Retrigger();

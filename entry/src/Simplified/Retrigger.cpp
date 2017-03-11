@@ -21,6 +21,19 @@
  *      Author: jtmakela
  */
 
+#include <math.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <map>
+#include <algorithm>    // std::sort
+#include <limits> // std::numeric
+#include <time.h> // clock
+
+#include "macro.h"
+#include "../utils/memory_manager.h"
+#include "../myDSP/Iir.h"
+
 #include "Retrigger.h"
 
 namespace Simplified {
@@ -31,7 +44,7 @@ namespace Simplified {
  * Uses cached Blackman window (/tmp/Retrigger.blackman,window.dat). Must be manually deleted
  * if window langht or sample rate is altered.
  *
- * @param double const & Energy function window length in fraction of sample time (seconds)
+ * @param Energy function window length in fraction of sample time (seconds)
  */
 Retrigger::Retrigger(double const &window_length_in_fractions_of_sample_time) :
 		raw(0), len(0), len_in_bytes(0), in(0), energy(0), blackman_window(0), retrig_convolution_kernel(
@@ -120,8 +133,8 @@ Retrigger::~Retrigger() {
  * 2. FIR filter with externally set convolution kernel; and
  * 3. Smooth with Blackman window
  *
- *  @param data_raw_t const * Pointer to data
- *  @param size_t const & Length of data in samples
+ *  @param Pointer to data
+ *  @param Length of data in samples
  */
 void Retrigger::set_data(data_raw_t const *raw, size_t const &len) {
 	this->raw = raw;
@@ -149,8 +162,8 @@ void Retrigger::set_data(data_raw_t const *raw, size_t const &len) {
  *
  * Simplified to PhysioNet environment from OpenCL enabled environment.
  *
- * @param cl_float const * Pointer to data (Convolution kernel)
- * @param size_t const & Length of data in samples
+ * @param Pointer to data (Convolution kernel)
+ * @param Length of data in samples
  */
 void Retrigger::set_convolution_kernel(cl_float const *kernel,
 		size_t const &len) {
@@ -175,11 +188,11 @@ void Retrigger::set_convolution_kernel(cl_float const *kernel,
  *
  * See retrig.cl
  *
- * @param cl_float * Pointer to output memory space. Must be properly allocated.
- * @param cl_float * Pointer to longer convolution component (stream)
- * @param ulong const Length of longer convolution component
- * @param cl_float * Pointer to shorter convolution component (window)
- * @param ulong const Length of shorter convolution component
+ * @param Pointer to output memory space. Must be properly allocated.
+ * @param Pointer to longer convolution component (stream)
+ * @param Length of longer convolution component
+ * @param Pointer to shorter convolution component (window)
+ * @param Length of shorter convolution component
  */
 static void retrig_convolution_program(cl_float *out, cl_float *a,
 		ulong const a_len, cl_float *b, ulong const b_len) {
@@ -203,11 +216,11 @@ static void retrig_convolution_program(cl_float *out, cl_float *a,
  *
  * See retrig.cl
  *
- * @param cl_float * Pointer to output memory space. Must be properly allocated.
- * @param cl_float * Pointer to data (stream)
- * @param ulong const Length of data in samples
- * @param cl_float * Pointer to window function memory space
- * @param ulong const Length of window function in bytes
+ * @param Pointer to output memory space. Must be properly allocated.
+ * @param Pointer to data (stream)
+ * @param Length of data in samples
+ * @param Pointer to window function memory space
+ * @param Length of window function in bytes
  */
 static void retrig_energy_program(cl_float *out, cl_float *a, ulong const a_len,
 		cl_float *b, ulong const b_len) {
@@ -261,8 +274,8 @@ void Retrigger::calculate_energy() {
 /**
  * Find local energy maxima near reference events and set locally stored temporary events accordingly
  *
- * @param struct ref_event const & Reference event
- * @param off_t const & Bias in sample space
+ * @param Reference event
+ * @param Bias in sample space
  */
 void Retrigger::calc(struct ref_event const &e, off_t const &_offset) {
 	size_t const offset = e.offset + _offset;
@@ -298,9 +311,9 @@ void Retrigger::calc(struct ref_event const &e, off_t const &_offset) {
 /**
  * Calculate average
  *
- * @param cl_float * Pointer to data
- * @param ulong const & Length of data in samples
- * @return cl_float Average of len data points
+ * @param Pointer to data
+ * @param Length of data in samples
+ * @return Average of len data points
  */
 static cl_float avg(cl_float const *d, ulong const &len) {
 	cl_float _avg = 0.0;
@@ -317,13 +330,13 @@ static cl_float avg(cl_float const *d, ulong const &len) {
  *
  * See retrig.cl
  *
- * @param cl_float * Pointer to output memory space. Must be properly allocated.
- * @param cl_float * Pointer to longer correlation component (stream)
- * @param ulong const Length of longer correlation component
- * @param cl_float * Pointer to shorter correlation component (window)
- * @param ulong const Length of shorter correlation component
- * @param cl_float const & Precalculated average value of the shorter correlation component (window)
- * @param cl_float const & Precalculated standard deviation value of the shorter correlation component (window)
+ * @param Pointer to output memory space. Must be properly allocated.
+ * @param Pointer to longer correlation component (stream)
+ * @param Length of longer correlation component
+ * @param Pointer to shorter correlation component (window)
+ * @param Length of shorter correlation component
+ * @param Precalculated average value of the shorter correlation component (window)
+ * @param Precalculated standard deviation value of the shorter correlation component (window)
  */
 static void retrig_correlation_program(cl_float *out, cl_float *a,
 		ulong const &a_len, cl_float *b, ulong const &b_len,
@@ -410,8 +423,8 @@ void Retrigger::calculate_correlations() {
 /**
  * Form cluster from event
  *
- * @param std::vector<ref_ev_ext_it>::iterator & Reference to trunk event
- * @return std::vector<struct retrig_event> Vector of offsets and correlations of autocorrelating events
+ * @param Reference to trunk event
+ * @return Vector of offsets and correlations of autocorrelating events
  */
 retrig_ev Retrigger::form_cluster(
 		std::vector<ref_ev_ext_it>::iterator & trunk_it) {
@@ -554,7 +567,7 @@ bool corr_p_sort(ref_ev_ext_it i, ref_ev_ext_it j) {
  * If a distinct separation to S1 and S2 can't be made, the best cluster is labeled as EV.
  * If no cluster has more than three events, all clusters are rejected.
  *
- * @param double const & Cut-off correlation limit
+ * @param Cut-off correlation limit
  */
 void Retrigger::calc_correlations(double const &correlation_limit) {
 	{
@@ -728,7 +741,7 @@ void Retrigger::calc_correlations(double const &correlation_limit) {
 /**
  * Getter for events
  *
- * @return const std::vector<struct retrig_event> & Events in EV cluster
+ * @return Events in EV cluster
  */
 const retrig_ev &Retrigger::get_events() const {
 	return ev;
@@ -737,7 +750,7 @@ const retrig_ev &Retrigger::get_events() const {
 /**
  * Getter for events
  *
- * @return const std::vector<struct retrig_event> & Events in S1 cluster
+ * @return Events in S1 cluster
  */
 const retrig_ev &Retrigger::get_s1_events() const {
 	if (evs.size() < 2) {
@@ -749,7 +762,7 @@ const retrig_ev &Retrigger::get_s1_events() const {
 /**
  * Getter for events
  *
- * @return const std::vector<struct retrig_event> & Events in S2 cluster
+ * @return Events in S2 cluster
  */
 const retrig_ev &Retrigger::get_s2_events() const {
 	if (evs.size() < 2) {
@@ -761,7 +774,7 @@ const retrig_ev &Retrigger::get_s2_events() const {
 /**
  * Getter for energy signal
  *
- * @return const cl_float * Pointer to the energy signal
+ * @return Pointer to the energy signal
  */
 const cl_float *Retrigger::get_energy() const {
 	return energy;
@@ -786,7 +799,7 @@ bool offset_sort(struct ref_event_ext i, struct ref_event_ext j) {
  * If the number of reference events exceeds /ref_ev_limit/, only the
  * middlemost /ref_ev_events/ are copied.
  *
- * @param std::vector<struct ref_event> const & Vector of reference events
+ * @param Vector of reference events
  */
 void Retrigger::set_ref_ev(ref_ev const &ev) {
 	if (ev.size() < ref_ev_limit) {
@@ -839,8 +852,8 @@ void Retrigger::set_ref_ev(ref_ev const &ev) {
 /**
  * Setter for convolution lookaround window
  *
- * @param double const & Window length in samples
- * @param double const & Window center offset in samples
+ * @param Window length in samples
+ * @param Window center offset in samples
  */
 void Retrigger::set_lookaround_window(double const &len, double const &offset) {
 	lookaround_window.len = len * sample_freq;
@@ -851,8 +864,8 @@ void Retrigger::set_lookaround_window(double const &len, double const &offset) {
 /**
  * Setter for correlation window
  *
- * @param double const & Window length in samples
- * @param double const & Window center offset in samples
+ * @param Window length in samples
+ * @param Window center offset in samples
  */
 void Retrigger::set_correlation_window(double const &len,
 		double const &offset) {

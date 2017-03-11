@@ -8,10 +8,14 @@
 #ifndef INCLUDE_TYPES_DATA_H_
 #define INCLUDE_TYPES_DATA_H_
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #ifndef ssize_t
-#define ssize_t int64_t
+typedef int64_t ssize_t;
+#endif
+
+#ifndef cl_float
+typedef float cl_float;
 #endif
 
 typedef double data_raw_t;

@@ -22,6 +22,16 @@
  *  Based on PhysioNet WAV reader by hvaanane
  */
 
+#include <cstdio>
+#include <errno.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include "macro.h"
+#include "../utils/memory_manager.h"
+
 #include "PhysionetChallenge2016.h"
 
 namespace Signal {
@@ -31,7 +41,7 @@ namespace Signal {
  *
  * Corrects corrupted data baseline and amplitude scale on demand
  *
- * @param char const * Input filename
+ * @param Input filename
  */
 PhysionetChallenge2016::PhysionetChallenge2016(char const *basename) {
 	char filename[FILENAME_MAX];
@@ -140,13 +150,13 @@ PhysionetChallenge2016::~PhysionetChallenge2016() {
 }
 
 /**
- * @return data_raw_t * Pointer to struct data_raw_t
+ * @return Pointer to struct data_raw_t
  */
 data_raw_t *PhysionetChallenge2016::get_signal() const {
 	return dat.ch->raw;
 }
 /**
- * @return size_t const & Number of samples in data
+ * @return Number of samples in data
  */
 size_t const &PhysionetChallenge2016::size() const {
 	return dat.samples_per_channel;

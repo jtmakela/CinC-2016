@@ -21,6 +21,15 @@
  *      Author: jtmakela
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <libgen.h>
+#include <unistd.h>
+#include <errno.h>
+#include "macro.h"
+#include "types.event.h"
+#include "../utils/memory_manager.h"
+
 #include "Csv2kernel.h"
 
 namespace Trigger {
@@ -30,7 +39,7 @@ namespace Trigger {
  *
  * Caches binary format file in /tmp/
  *
- * @param char const * Kernel filename
+ * @param Kernel filename
  */
 Csv2kernel::Csv2kernel(char const *filename) :
 		kernel(0), kernel_len(0) {
@@ -103,7 +112,7 @@ Csv2kernel::Csv2kernel(char const *filename) :
 
 			*p = atof(c);
 		}
-	} catch (typeof(errno) e) {
+	} catch (int e) {
 		fclose(f);
 		mm_free(c);
 		throw e;
@@ -135,7 +144,7 @@ Csv2kernel::~Csv2kernel() {
 /**
  * Getter for kernel window
  *
- * @return cl_float const * Pointer to kernel window
+ * @return Pointer to kernel window
  */
 cl_float const *Csv2kernel::get_data() const {
 	return kernel;
@@ -143,7 +152,7 @@ cl_float const *Csv2kernel::get_data() const {
 /**
  * Getter for kernel window size
  *
- * @return size_t const & Lenght of kernel window in samples
+ * @return Lenght of kernel window in samples
  */
 size_t const &Csv2kernel::size() const {
 	return kernel_len;

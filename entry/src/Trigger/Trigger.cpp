@@ -22,6 +22,14 @@
  *  Based on an ECG trig algorithm by hvaanane
  */
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <float.h>
+
+#include "../utils/memory_manager.h"
+#include "types.event.h"
+
 #include "Trigger.h"
 
 namespace Accbpm {
@@ -29,9 +37,9 @@ namespace Accbpm {
 /**
  * A rough energy slope trigger. Derived from the Accbpm project.
  *
- * @param cl_float const * Pointer to energy signal
- * @param size_t const & Length of energy signal in samples
- * @param doube const & Sample rate in time domain (eq. samples per second)
+ * @param Pointer to energy signal
+ * @param Length of energy signal in samples
+ * @param Sample rate in time domain (eq. samples per second)
  */
 Trigger::Trigger(cl_float const *energy, size_t const &len,
 		double const &sample_freq) :
@@ -50,10 +58,10 @@ Trigger::~Trigger() {
  *
  * FIXME: This could be replaced with std::nth_element
  *
- * @param cl_float [] An array of values to sort. Notice that this implementation modifies the array.
- * @param ssize_t const Length of array
- * @param ssize_t const kth smallest value to extract from the array
- * @return double Value fo the kth smallest item in array
+ * @param An array of values to sort. Notice that this implementation modifies the array.
+ * @param Length of array
+ * @param kth smallest value to extract from the array
+ * @return Value fo the kth smallest item in array
  */
 __attribute__((deprecated)) double Trigger::kth_smallest(cl_float a[], ssize_t const n, ssize_t const k) {
 	cl_float const &x = a[k];
@@ -91,12 +99,12 @@ __attribute__((deprecated)) double Trigger::kth_smallest(cl_float a[], ssize_t c
  *
  * TODO more suitable
  *
- * @param cl_float const * Pointer to the source signal
- * @param int Lenght of source signal in samples
- * @param int Number of samples to skip from the beginning of source signal
- * @param double Sample rate of the source signal in time domain (eq. samples per second)
- * @param double *threshold Pointer to output
- * @return int Always returns 0
+ * @param Pointer to the source signal
+ * @param Lenght of source signal in samples
+ * @param Number of samples to skip from the beginning of source signal
+ * @param Sample rate of the source signal in time domain (eq. samples per second)
+ * @param Pointer to output
+ * @return Always returns zero
  */
 int Trigger::define_threshold_value(cl_float const *energy, int len,
 		int skip_offset, double freq, double *threshold) {
@@ -146,7 +154,7 @@ int Trigger::define_threshold_value(cl_float const *energy, int len,
  * Trig on energy signal above limit. Expect the signal to remain above limit for 400ms
  * tolerating 60ms continuous sinking below limit. Skips 200ms after each trig.
  *
- * @return int Always returns zero
+ * @return Always returns zero
  */
 int Trigger::trig_do() {
 	int const max_tolerance = 0.060 * sample_freq, max_above_len = 0.400
@@ -220,7 +228,7 @@ int Trigger::trig_do() {
 /**
  * Getter for trigged events
  *
- * @return std::vector<struct ref_event> const & Reference to vector of trigged events
+ * @return Reference to vector of trigged events
  */
 ref_ev const &Trigger::get_events() const {
 	return ev;

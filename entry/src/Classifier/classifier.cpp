@@ -21,10 +21,12 @@
  *      Author: hvaanane
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
 #include <limits.h>
@@ -136,14 +138,14 @@ __attribute_used__ int do_with_strings(struct data *data,
 /**
  * A dynamically created tree classifier. See the article for further details.
  *
- * @param struct data * Pointer to ECG legacy data structure
- * @param std::vector<struct retrig_event> const * Pointer to mandatory first event cluster
- * @param std::vector<struct retrig_event> const * Pointer to optional second event cluster
- * @param char * Marker tree filename to be used
- * @return enum result_e Classifier result; normal, abnormal or unknown
+ * @param Pointer to ECG legacy data structure
+ * @param Pointer to mandatory first event cluster
+ * @param Pointer to optional second event cluster
+ * @param Marker tree filename to be used
+ * @return Classifier result; normal, abnormal or unknown
  */
 enum result_e classify_this(struct data *data, Simplified::retrig_ev const *ev1,
-		Simplified::retrig_ev const *ev2, char *tree_name) {
+		Simplified::retrig_ev const *ev2, char const *tree_name) {
 	struct string_tree tree = { };
 
 	load_txt_string_tree(tree_name, &tree);

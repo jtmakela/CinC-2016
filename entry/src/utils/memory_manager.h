@@ -8,15 +8,7 @@
 #ifndef SRC_UTILS_MEMORY_MANAGER_H_
 #define SRC_UTILS_MEMORY_MANAGER_H_
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <errno.h>
-#include <pthread.h>
-#include <unistd.h>
-
-#include "macro.h"
+#include <cstdlib>
 
 #ifdef USE_MEMORY_MANAGER
 void *_mm_malloc(size_t size, char const * const file, size_t const line);

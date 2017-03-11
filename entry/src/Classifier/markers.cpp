@@ -21,10 +21,10 @@
  *      Author: hvaanane
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstdint>
 #include <unistd.h>
 #include <errno.h>
 #include <limits.h>
@@ -44,14 +44,14 @@
 namespace Classifier {
 namespace Markers {
 
-static double conf_s_start = -0.100;
-static double conf_s_end = 0.100;
-static double conf_margin = 0.050;
-static double conf_moving_std_len = 0.100;
-static double conf_default_rr = 0.800;
-static double conf_default_s1s2_dur = 0.400;
-static double conf_win_len = 3.0;
-static double conf_ignore_from_start = 1.0;
+static double constexpr conf_s_start = -0.100;
+static double constexpr conf_s_end = 0.100;
+static double constexpr conf_margin = 0.050;
+static double constexpr conf_moving_std_len = 0.100;
+static double constexpr conf_default_rr = 0.800;
+static double constexpr conf_default_s1s2_dur = 0.400;
+static double constexpr conf_win_len = 3.0;
+static double constexpr conf_ignore_from_start = 1.0;
 
 struct double_array {
 	double *data;
@@ -487,14 +487,14 @@ static inline double get_s1s2_dur(Simplified::retrig_ev const *s1_events,
 
 #define MARKERS_N_WIDTH_LEVELS 5
 
-static int get_named_value(char *where, char *how, struct double_array *ddata,
+static int get_named_value(char const *where, char const *how, struct double_array *ddata,
 		double sfreq, Simplified::retrig_ev const *s1_events,
 		Simplified::retrig_ev const *s2_events, double *marker_value) {
-	static struct double_array tmp_array = { 0 }; // set as static, so it doesn't have to be realloced again every time (TODO free).
-	static struct double_array std_array = { 0 }; // set as static, so it doesn't have to be realloced again every time (TODO free).
-	static struct double_array min = { 0 }; // set as static, so it doesn't have to be realloced again every time (TODO free).
-	static struct double_array max = { 0 }; // set as static, so it doesn't have to be realloced again every time (TODO free).
-	static struct double_array minmax = { 0 }; // set as static, so it doesn't have to be realloced again every time (TODO free).
+	static struct double_array tmp_array = { }; // set as static, so it doesn't have to be realloced again every time (TODO free).
+	static struct double_array std_array = { }; // set as static, so it doesn't have to be realloced again every time (TODO free).
+	static struct double_array min = { }; // set as static, so it doesn't have to be realloced again every time (TODO free).
+	static struct double_array max = { }; // set as static, so it doesn't have to be realloced again every time (TODO free).
+	static struct double_array minmax = { }; // set as static, so it doesn't have to be realloced again every time (TODO free).
 	double s1s2_dur, ss_dur;
 
 	if (!strcmp(how, "all")) {
@@ -682,7 +682,7 @@ static int get_named_value(char *where, char *how, struct double_array *ddata,
 	return (0);
 }
 
-int create_named(char *name, struct data *data,
+int create_named(char const *name, struct data *data,
 		Simplified::retrig_ev const *s1_events,
 		Simplified::retrig_ev const *s2_events, double *marker_value) {
 	char what[10], where[10], to[10], how[10];

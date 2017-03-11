@@ -8,12 +8,6 @@
 #ifndef SRC_TRIGGER_H_
 #define SRC_TRIGGER_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <float.h>
-
-#include "../utils/memory_manager.h"
 #include "types.data.h"
 #include "types.event.h"
 

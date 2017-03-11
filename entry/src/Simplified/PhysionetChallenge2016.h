@@ -8,16 +8,7 @@
 #ifndef ENTRY_SRC_SIMPLIFIED_PHYSIONETCHALLENGE2016_H_
 #define ENTRY_SRC_SIMPLIFIED_PHYSIONETCHALLENGE2016_H_
 
-#include <stdio.h>
-#include <errno.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-#include "macro.h"
 #include "types.data.h"
-#include "../utils/memory_manager.h"
 
 namespace Signal {
 
